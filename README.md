@@ -97,25 +97,6 @@ Visit http://127.0.0.1:5000 in your web browser.
 
 💡 First Time Setup: Since the database starts empty, click "Register" to create the first officer account. This account will automatically be granted Admin privileges.
 
-📸 Screenshots
-
-Dashboard	
-<img width="1896" height="903" alt="Screenshot 2026-10-03 120008" src="https://github.com/user-attachments/assets/dc7f1dc0-1b31-4f94-9a4a-68450accfc76" />
-
-Violation Records
-<img width="1897" height="902" alt="Screenshot 2026-10-03 120052" src="https://github.com/user-attachments/assets/9fc903a9-dd2e-48f9-bf2a-e21d7c825dc6" />
-
-Add Violation	
-<img width="1915" height="903" alt="Screenshot 2026-10-03 120117" src="https://github.com/user-attachments/assets/df365915-0e5b-4098-8efd-4e179f9b4af9" />
-
-Officers
-<img width="1907" height="906" alt="Screenshot 2026-10-03 120213" src="https://github.com/user-attachments/assets/e784a34e-17d1-450a-b825-a1f4dab25ab9" />
-
-QR Code Challan
-<img width="1892" height="908" alt="Screenshot 2026-10-03 122458" src="https://github.com/user-attachments/assets/4175a3e9-fabe-4b86-a02f-94c9e922d97b" />
-
-Verify Challan
-<img width="1900" height="910" alt="Screenshot 2026-10-03 120232" src="https://github.com/user-attachments/assets/dfedd93c-f630-4f89-8a7c-b52d01eff0f4" />
 
 🔐 Security Features
 Password Hashing: Passwords are never stored in plain text (uses Werkzeug generate_password_hash).
