@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}Violation Records{% endblock %}
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+  <h3 class="mb-2">Violation Records</h3>
+  <a href="{{ url_for('violations.export') }}" class="btn btn-outline-success btn-sm"><i class="bi bi-download me-1"></i>Export CSV</a>
+</div>
+
+<form class="row g-2 mb-4" method="get">
+  <div class="col-md-2"><input type="text" name="vehicle" class="form-control form-control-sm" placeholder="Vehicle No." value="{{ filters.get('vehicle','') }}"></div>
+  <div class="col-md-2">
+    <select name="status" class="form-select form-select-sm">
+      <option value="">All Status</option>
+      <option value="Unpaid" {{ 'selected' if filters.get('status')=='Unpaid' }}>Unpaid</option>
+      <option value="Paid" {{ 'selected' if filters.get('status')=='Paid' }}>Paid</option>
+    </select>
+  </div>
+  <div class="col-md-2">
+    <select name="type" class="form-select form-select-sm">
+      <option value="">All Types</option>
+      {% for t in ['No Helmet','Overspeeding','Signal Jump','No Seatbelt','Drunk Driving','Wrong Parking','Other'] %}
+        <option value="{{ t }}" {{ 'selected' if filters.get('type')==t }}>{{ t }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-md-2"><input type="date" name="date_from" class="form-control form-control-sm" value="{{ filters.get('date_from','') }}"></div>
+  <div class="col-md-2"><input type="date" name="date_to" class="form-control form-control-sm" value="{{ filters.get('date_to','') }}"></div>
+  <div class="col-md-2 d-flex gap-1">
+    <button class="btn btn-accent btn-sm w-100">Filter</button>
+    <a href="{{ url_for('violations.index') }}" class="btn btn-outline-secondary btn-sm">Reset</a>
+  </div>
+</form>
+
+<div class="table-responsive">
+  <table class="table table-hover align-middle bg-white shadow-sm rounded">
+    <thead class="table-light">
+      <tr>
+        <th>Challan No</th><th>Vehicle</th><th>Type</th><th>Location</th><th>Date</th><th>Fine</th><th>Status</th><th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for v in violations.items %}
+        <tr>
+          <td><a href="{{ url_for('violations.challan', challan_number=v.challan_number) }}">{{ v.challan_number }}</a></td>
+          <td>{{ v.vehicle_number }}</td>
+          <td>{{ v.violation_type }}</td>
+          <td>{{ v.location }}</td>
+          <td>{{ v.date.strftime('%d %b %Y') }}</td>
+          <td>₹{{ "%.0f"|format(v.fine_amount) }}</td>
+          <td><span class="badge {{ 'bg-success' if v.status=='Paid' else 'bg-warning text-dark' }}">{{ v.status }}</span></td>
+          <td><a href="{{ url_for('violations.edit', id=v.id) }}" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a></td>
+        </tr>
+      {% else %}
+        <tr><td colspan="8" class="text-center text-muted py-4">No records found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% if violations.pages > 1 %}
+<nav>
+  <ul class="pagination justify-content-center">
+    {% for p in violations.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+      {% if p %}
+        <li class="page-item {{ 'active' if p == violations.page }}"><a class="page-link" href="{{ url_for('violations.index', page=p, **filters) }}">{{ p }}</a></li>
+      {% else %}
+        <li class="page-item disabled"><span class="page-link">…</span></li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+</nav>
+{% endif %}
+{% endblock %}

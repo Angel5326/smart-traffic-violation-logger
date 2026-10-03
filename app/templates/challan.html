@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}Challan {{ violation.challan_number }}{% endblock %}
+
+{% block content %}
+
+<!-- ✅ Success animation (only shown briefly when freshly created) -->
+<div class="text-center mb-4" style="animation: fadeUp 0.6s ease;">
+  <div class="success-check">
+    <i class="bi bi-check-lg"></i>
+  </div>
+  <h4 class="mb-1">Challan Generated Successfully</h4>
+  <p class="text-muted small">Scan the QR code below to view the public status page.</p>
+</div>
+
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <div class="card border-0 shadow-sm">
+      <div class="card-body p-4">
+
+        <div class="d-flex justify-content-between align-items-start mb-4">
+          <div>
+            <h4 class="mb-1">Traffic Violation Challan</h4>
+            <div class="text-muted small">
+              Challan No: <strong>{{ violation.challan_number }}</strong>
+            </div>
+          </div>
+          <span class="badge fs-6 {{ 'bg-success' if violation.status=='Paid' else 'bg-warning text-dark' }}">
+            {{ violation.status }}
+          </span>
+        </div>
+
+        <div class="row mb-4">
+          <div class="col-md-7">
+            <table class="table table-sm table-borderless">
+              <tr><th width="40%">Vehicle Number</th><td>{{ violation.vehicle_number }}</td></tr>
+              <tr><th>Violation Type</th><td>{{ violation.violation_type }}</td></tr>
+              <tr><th>Location</th><td>{{ violation.location }}</td></tr>
+              <tr><th>Date</th><td>{{ violation.date.strftime('%d %B %Y') }}</td></tr>
+              <tr><th>Fine Amount</th><td class="fw-bold">₹{{ "%.0f"|format(violation.fine_amount) }}</td></tr>
+              {% if violation.payment_reference %}
+              <tr><th>Payment Ref</th><td>{{ violation.payment_reference }}</td></tr>
+              {% endif %}
+              <tr>
+                <th>Issuing Officer</th>
+                <td>{{ violation.officer.full_name }} ({{ violation.officer.badge_id }})</td>
+              </tr>
+            </table>
+          </div>
+
+          <div class="col-md-5 text-center">
+            <img src="{{ qr_code }}" alt="QR Code"
+                 class="img-fluid border rounded p-2" style="max-width: 180px;">
+            <div class="small text-muted mt-2">Scan to verify status</div>
+          </div>
+        </div>
+
+        <div class="alert alert-light border small">
+          <i class="bi bi-link-45deg me-1"></i>Public verification link:
+          <a href="{{ verify_url }}" target="_blank">{{ verify_url }}</a>
+        </div>
+
+        <div class="d-flex gap-2">
+          <a href="{{ url_for('violations.index') }}" class="btn btn-outline-secondary">
+            Back to Records
+          </a>
+          <button onclick="window.print()" class="btn btn-accent">
+            <i class="bi bi-printer me-1"></i>Print
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

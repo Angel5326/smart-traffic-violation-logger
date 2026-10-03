@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Officers{% endblock %}
+{% block content %}
+<h3 class="mb-4">Registered Officers</h3>
+<div class="table-responsive">
+  <table class="table table-hover bg-white shadow-sm rounded">
+    <thead class="table-light">
+      <tr><th>Badge ID</th><th>Name</th><th>Rank</th><th>Email</th><th>Admin</th><th>Joined</th></tr>
+    </thead>
+    <tbody>
+      {% for o in officers %}
+        <tr>
+          <td>{{ o.badge_id }}</td>
+          <td>{{ o.full_name }}</td>
+          <td>{{ o.rank }}</td>
+          <td>{{ o.email }}</td>
+          <td>{% if o.is_admin %}<span class="badge bg-primary">Admin</span>{% else %}—{% endif %}</td>
+          <td>{{ o.created_at.strftime('%d %b %Y') }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

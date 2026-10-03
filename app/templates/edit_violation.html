@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Update Status{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-6">
+    <div class="card border-0 shadow-sm">
+      <div class="card-body p-4">
+        <h4 class="card-title mb-4"><i class="bi bi-pencil-square me-2"></i>Update Violation Status</h4>
+        <p><strong>Challan:</strong> {{ violation.challan_number }}<br>
+           <strong>Vehicle:</strong> {{ violation.vehicle_number }}<br>
+           <strong>Violation:</strong> {{ violation.violation_type }}</p>
+        <form method="post">
+          {{ form.hidden_tag() }}
+          <div class="mb-3">
+            {{ form.status.label(class="form-label") }}
+            {{ form.status(class="form-select") }}
+          </div>
+          <div class="mb-3">
+            {{ form.payment_reference.label(class="form-label") }}
+            {{ form.payment_reference(class="form-control", placeholder="Transaction ID / Reference") }}
+          </div>
+          <button type="submit" class="btn btn-accent">Update</button>
+          <a href="{{ url_for('violations.index') }}" class="btn btn-outline-secondary">Cancel</a>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

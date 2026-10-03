@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+
+<div class="reveal">
+  <h3 class="mb-4">Dashboard</h3>
+</div>
+
+<div class="row g-4 mb-4">
+  <div class="col-md-3 reveal">
+    <div class="card stat-card border-0 shadow-sm">
+      <div class="card-body">
+        <div class="text-muted small text-uppercase fw-bold">Total Violations</div>
+        <div class="fs-2 fw-bold mt-1">{{ total_violations }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3 reveal">
+    <div class="card stat-card unpaid border-0 shadow-sm">
+      <div class="card-body">
+        <div class="text-muted small text-uppercase fw-bold">Unpaid</div>
+        <div class="fs-2 fw-bold mt-1">{{ unpaid_count }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3 reveal">
+    <div class="card stat-card paid border-0 shadow-sm">
+      <div class="card-body">
+        <div class="text-muted small text-uppercase fw-bold">Paid</div>
+        <div class="fs-2 fw-bold mt-1">{{ paid_count }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3 reveal">
+    <div class="card stat-card fine border-0 shadow-sm">
+      <div class="card-body">
+        <div class="text-muted small text-uppercase fw-bold">Collected Fine</div>
+        <div class="fs-2 fw-bold mt-1">₹{{ "%.0f"|format(collected_fine) }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-8 reveal">
+    <div class="card border-0 shadow-sm">
+      <div class="card-header bg-white fw-semibold">Last 7 Days Violations</div>
+      <div class="card-body">
+        <canvas id="violationsChart" height="120"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-4 reveal">
+    <div class="card border-0 shadow-sm">
+      <div class="card-header bg-white fw-semibold">Recent Challans</div>
+      <ul class="list-group list-group-flush">
+        {% for v in recent %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+              <div class="fw-semibold">{{ v.vehicle_number }}</div>
+              <div class="small text-muted">{{ v.violation_type }} &middot; {{ v.date.strftime('%d %b') }}</div>
+            </div>
+            <span class="badge {{ 'bg-success' if v.status == 'Paid' else 'bg-warning text-dark' }}">{{ v.status }}</span>
+          </li>
+        {% else %}
+          <li class="list-group-item text-muted">No recent violations.</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+  const ctx = document.getElementById('violationsChart');
+  const gradient = ctx.getContext('2d').createLinearGradient(0, 0, 0, 240);
+  gradient.addColorStop(0, 'rgba(255, 107, 53, 0.85)');
+  gradient.addColorStop(1, 'rgba(255, 107, 53, 0.15)');
+
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: {{ labels|tojson }},
+      datasets: [{
+        label: 'Violations',
+        data: {{ data|tojson }},
+        backgroundColor: gradient,
+        borderRadius: 8,
+        borderSkipped: false
+      }]
+    },
+    options: {
+      animation: { duration: 1200, easing: 'easeOutQuart' },
+      scales: {
+        y: { beginAtZero: true, ticks: { stepSize: 1 }, grid: { color: 'rgba(0,0,0,0.04)' } },
+        x: { grid: { display: false } }
+      },
+      plugins: { legend: { display: false } }
+    }
+  });
+</script>
+{% endblock %}

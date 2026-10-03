@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}New Challan{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <div class="card border-0 shadow-sm">
+      <div class="card-body p-4">
+        <h4 class="card-title mb-4"><i class="bi bi-plus-circle me-2"></i>Record New Violation</h4>
+        <form method="post">
+          {{ form.hidden_tag() }}
+          <div class="row g-3">
+            <div class="col-md-6">
+              {{ form.vehicle_number.label(class="form-label") }}
+              {{ form.vehicle_number(class="form-control", placeholder="e.g. MH12AB1234") }}
+            </div>
+            <div class="col-md-6">
+              {{ form.violation_type.label(class="form-label") }}
+              {{ form.violation_type(class="form-select") }}
+            </div>
+            <div class="col-12">
+              {{ form.location.label(class="form-label") }}
+              {{ form.location(class="form-control", placeholder="Location of violation") }}
+            </div>
+            <div class="col-md-6">
+              {{ form.date.label(class="form-label") }}
+              {{ form.date(class="form-control", type="date") }}
+            </div>
+            <div class="col-md-6">
+              {{ form.fine_amount.label(class="form-label") }}
+              {{ form.fine_amount(class="form-control", placeholder="Amount in ₹") }}
+            </div>
+          </div>
+          <button type="submit" class="btn btn-accent mt-4"><i class="bi bi-save me-1"></i>Save Violation</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

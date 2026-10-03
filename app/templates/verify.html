@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Verify Challan{% endblock %}
+{% block content %}
+
+<div class="hero-verify reveal">
+  <div class="brand-badge mx-auto mb-3" style="width: 60px; height: 60px; font-size: 1.8rem;">
+    <i class="bi bi-shield-fill-check"></i>
+  </div>
+  <h1>Verify Your Challan</h1>
+  <p>Enter your challan number below to check the violation details and payment status instantly.</p>
+</div>
+
+<div class="row justify-content-center mt-3">
+  <div class="col-lg-6 reveal">
+    <div class="card border-0 shadow-sm">
+      <div class="card-body p-4">
+        <form method="get" class="mb-2">
+          <div class="input-group input-group-lg">
+            <input type="text" name="challan_number" class="form-control"
+                   placeholder="e.g. CH-20250101-ABCD"
+                   value="{{ challan_number or '' }}">
+            <button class="btn btn-accent px-4" type="submit">
+              <i class="bi bi-search me-1"></i>Search
+            </button>
+          </div>
+        </form>
+        <div class="small text-muted text-center">Tip: The challan number is printed on your receipt.</div>
+
+        {% if violation %}
+          <div class="border rounded-3 p-3 mt-4" style="background: #f8fafc;">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h5 class="mb-0">{{ violation.challan_number }}</h5>
+              <span class="badge {{ 'bg-success' if violation.status=='Paid' else 'bg-warning text-dark' }} fs-6">{{ violation.status }}</span>
+            </div>
+            <table class="table table-sm table-borderless mb-0">
+              <tr><th width="40%">Vehicle</th><td>{{ violation.vehicle_number }}</td></tr>
+              <tr><th>Violation</th><td>{{ violation.violation_type }}</td></tr>
+              <tr><th>Location</th><td>{{ violation.location }}</td></tr>
+              <tr><th>Date</th><td>{{ violation.date.strftime('%d %B %Y') }}</td></tr>
+              <tr><th>Fine Amount</th><td class="fw-bold">₹{{ "%.0f"|format(violation.fine_amount) }}</td></tr>
+              {% if violation.payment_reference %}
+              <tr><th>Payment Ref</th><td>{{ violation.payment_reference }}</td></tr>
+              {% endif %}
+            </table>
+          </div>
+        {% elif challan_number %}
+          <div class="alert alert-danger mt-4">
+            <i class="bi bi-x-circle me-1"></i>No challan found with that number.
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
